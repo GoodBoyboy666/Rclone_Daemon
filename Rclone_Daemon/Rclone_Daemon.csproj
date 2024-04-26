@@ -6,7 +6,48 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>TextTemplate.ico</ApplicationIcon>
+	  <Authors>GoodBoyboy</Authors>
+	  <VersionPrefix>1.0.0</VersionPrefix>
+	  <Description>一个Rclone守护，挂载管理软件</Description>
+	  <Copyright>Copyright (c)  GoodBoyboy, GoodBoyboy.top</Copyright>
+	  <PackageProjectUrl>https://www.goodboyboy.top</PackageProjectUrl>
+	  <PackageIcon>TextTemplate.ico</PackageIcon>
+	  <RepositoryUrl>https://github.com/GoodBoyboy666/Rclone_Daemon</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <NeutralLanguage>zh-CN</NeutralLanguage>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TextTemplate.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\TextTemplate.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

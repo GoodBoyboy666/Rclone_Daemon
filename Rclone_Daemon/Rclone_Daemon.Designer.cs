@@ -46,8 +46,10 @@
             退出ToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1 = new MenuStrip();
             设置ToolStripMenuItem = new ToolStripMenuItem();
-            开机启动ToolStripMenuItem = new ToolStripMenuItem();
+            开机启动 = new ToolStripMenuItem();
             设置Rclone路径ToolStripMenuItem = new ToolStripMenuItem();
+            关于ToolStripMenuItem = new ToolStripMenuItem();
+            SelectFile = new OpenFileDialog();
             notify_menu.SuspendLayout();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -63,6 +65,7 @@
             // 
             // add_btn
             // 
+            add_btn.Enabled = false;
             add_btn.Location = new Point(707, 93);
             add_btn.Name = "add_btn";
             add_btn.Size = new Size(94, 29);
@@ -73,6 +76,7 @@
             // 
             // change_btn
             // 
+            change_btn.Enabled = false;
             change_btn.Location = new Point(707, 171);
             change_btn.Name = "change_btn";
             change_btn.Size = new Size(94, 29);
@@ -83,15 +87,18 @@
             // 
             // del_btn
             // 
+            del_btn.Enabled = false;
             del_btn.Location = new Point(707, 249);
             del_btn.Name = "del_btn";
             del_btn.Size = new Size(94, 29);
             del_btn.TabIndex = 4;
             del_btn.Text = "删除";
             del_btn.UseVisualStyleBackColor = true;
+            del_btn.Click += del_btn_Click;
             // 
             // ed_btn
             // 
+            ed_btn.Enabled = false;
             ed_btn.Location = new Point(707, 327);
             ed_btn.Name = "ed_btn";
             ed_btn.Size = new Size(94, 29);
@@ -134,8 +141,9 @@
             // 
             notify.ContextMenuStrip = notify_menu;
             notify.Icon = (Icon)resources.GetObject("notify.Icon");
-            notify.Text = "notifyIcon";
+            notify.Text = "Rclone_Daemon";
             notify.Visible = true;
+            notify.DoubleClick += notify_DoubleClick;
             // 
             // notify_menu
             // 
@@ -161,7 +169,7 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { 设置ToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { 设置ToolStripMenuItem, 关于ToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(843, 28);
@@ -170,22 +178,36 @@
             // 
             // 设置ToolStripMenuItem
             // 
-            设置ToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { 开机启动ToolStripMenuItem, 设置Rclone路径ToolStripMenuItem });
+            设置ToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { 开机启动, 设置Rclone路径ToolStripMenuItem });
             设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
             设置ToolStripMenuItem.Size = new Size(53, 24);
             设置ToolStripMenuItem.Text = "设置";
             // 
-            // 开机启动ToolStripMenuItem
+            // 开机启动
             // 
-            开机启动ToolStripMenuItem.Name = "开机启动ToolStripMenuItem";
-            开机启动ToolStripMenuItem.Size = new Size(202, 26);
-            开机启动ToolStripMenuItem.Text = "开机启动";
+            开机启动.Name = "开机启动";
+            开机启动.Size = new Size(202, 26);
+            开机启动.Text = "开机启动";
+            开机启动.Click += 开机启动_Click;
             // 
             // 设置Rclone路径ToolStripMenuItem
             // 
             设置Rclone路径ToolStripMenuItem.Name = "设置Rclone路径ToolStripMenuItem";
             设置Rclone路径ToolStripMenuItem.Size = new Size(202, 26);
             设置Rclone路径ToolStripMenuItem.Text = "设置Rclone路径";
+            设置Rclone路径ToolStripMenuItem.Click += 设置Rclone路径ToolStripMenuItem_Click;
+            // 
+            // 关于ToolStripMenuItem
+            // 
+            关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
+            关于ToolStripMenuItem.Size = new Size(53, 24);
+            关于ToolStripMenuItem.Text = "关于";
+            关于ToolStripMenuItem.Click += 关于ToolStripMenuItem_Click;
+            // 
+            // SelectFile
+            // 
+            SelectFile.Filter = "Rclone文件|rclone.exe";
+            SelectFile.Title = "选择Rclone程序";
             // 
             // Rclone_Daemon
             // 
@@ -203,7 +225,7 @@
             MaximizeBox = false;
             Name = "Rclone_Daemon";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Rclone_Daemon";
+            Text = "Rclone_Daemon by GoodBoyboy v1.0";
             FormClosing += Rclone_Daemon_FormClosing;
             Load += Rclone_Daemon_Load;
             notify_menu.ResumeLayout(false);
@@ -231,7 +253,9 @@
         private ToolStripMenuItem 退出ToolStripMenuItem;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem 设置ToolStripMenuItem;
-        private ToolStripMenuItem 开机启动ToolStripMenuItem;
+        private ToolStripMenuItem 开机启动;
         private ToolStripMenuItem 设置Rclone路径ToolStripMenuItem;
+        private OpenFileDialog SelectFile;
+        private ToolStripMenuItem 关于ToolStripMenuItem;
     }
 }
