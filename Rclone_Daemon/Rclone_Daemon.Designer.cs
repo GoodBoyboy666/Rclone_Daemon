@@ -225,7 +225,7 @@
             MaximizeBox = false;
             Name = "Rclone_Daemon";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Rclone_Daemon by GoodBoyboy v1.0";
+            Text = "Rclone_Daemon by GoodBoyboy";
             FormClosing += Rclone_Daemon_FormClosing;
             Load += Rclone_Daemon_Load;
             notify_menu.ResumeLayout(false);

@@ -28,6 +28,33 @@ namespace Rclone_Daemon
         List<Rclone_Process> rdlist = new List<Rclone_Process>();    //维护Rclone进程集合
         private void Rclone_Daemon_Load(object sender, EventArgs e)
         {
+            //检测重复运行
+
+            Process[] is_run = Process.GetProcessesByName("Rclone_Daemon");
+            foreach (Process process in is_run)
+            {
+                if (process.Id != Process.GetCurrentProcess().Id)
+                {
+                    MessageBox.Show("检测到已运行Rclone_Daemon，请勿重复运行！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Process.GetCurrentProcess().Kill();
+                }
+            }
+
+            //检测残留rclone进程
+
+            Process[] rclones = Process.GetProcessesByName("rclone");
+            if(rclones.Length > 0)
+            {
+                DialogResult re= MessageBox.Show("检测到已运行的rclone进程，可能为程序未正常退出所遗留的进程，是否清除？","提示",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+                if (re == DialogResult.Yes)
+                {
+                    foreach (Process process in rclones)
+                    {
+                        process.Kill();
+                    }
+                }
+            }
+
             //初始化程序
             APPDATA = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
@@ -116,8 +143,16 @@ namespace Rclone_Daemon
             //释放所有挂载点
             foreach (Rclone_Process rp in rdlist)
             {
-                Process p = Process.GetProcessById(rp.Id);
-                p.Kill();
+                try
+                {
+                    Process p = Process.GetProcessById(rp.Id);
+                    p.Kill();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message,"警告",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                
             }
             //关闭主程序
             Process.GetCurrentProcess().Kill();
@@ -141,6 +176,9 @@ namespace Rclone_Daemon
             if (args[0] == "changed")
             {
                 AddItem(args[1], args[2], args[3], "已禁用");
+
+                //保存配置文件
+                save_data_json();
             }
         }
         /// <summary>
@@ -193,7 +231,7 @@ namespace Rclone_Daemon
             //写入config
             StreamWriter sw = new StreamWriter($"{APPDATA}/Rclone_Daemon/config.json");
             sw.WriteLine(data_json.ToString());
-            sw.Close();
+            sw.Dispose();
         }
 
         private void change_btn_Click(object sender, EventArgs e)
@@ -218,6 +256,9 @@ namespace Rclone_Daemon
                         Change_Status("disable");
                         Change_Status("enable");
                     }
+
+                    //保存配置文件
+                    save_data_json();
                 }
             }
             else
@@ -245,6 +286,13 @@ namespace Rclone_Daemon
                 {
                     mount_box.SelectedItems[0].SubItems["Status"].Text = "已启用";
                     ed_btn.Text = "禁用";
+
+                    //保存配置文件
+                    save_data_json();
+                }
+                else
+                {
+                    MessageBox.Show("启用失败！","错误",MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else if (ed_btn.Text == "禁用" && mount_box.SelectedItems.Count > 0)
@@ -253,6 +301,13 @@ namespace Rclone_Daemon
                 {
                     mount_box.SelectedItems[0].SubItems["Status"].Text = "已禁用";
                     ed_btn.Text = "启用";
+
+                    //保存配置文件
+                    save_data_json();
+                }
+                else
+                {
+                    MessageBox.Show("禁用失败！可能rclone程序未启动或已异常停止。","错误",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 }
             }
             else if (mount_box.SelectedItems.Count < 1)
@@ -273,7 +328,7 @@ namespace Rclone_Daemon
             }
             else if (operation == "disable")
             {
-                return Status_Stop(mount_box.SelectedItems[0].Text);
+                return Status_Stop(mount_box.SelectedItems[0].Text,false);
             }
             return false;
         }
@@ -281,7 +336,7 @@ namespace Rclone_Daemon
         /// 关闭Rclone进程
         /// </summary>
         /// <returns></returns>
-        private bool Status_Stop(string name)
+        private bool Status_Stop(string name ,bool force)
         {
             foreach (Rclone_Process rd in rdlist)
             {
@@ -295,7 +350,16 @@ namespace Rclone_Daemon
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message.ToString());
+                        if(force)
+                        {
+                            rdlist.Remove(rd);
+                            return true;
+                        }
+                        else
+                        {
+                            MessageBox.Show(ex.Message.ToString());
+                        }
+                        return false;
                     }
 
                     return true;
@@ -337,13 +401,24 @@ namespace Rclone_Daemon
                 }
                 else
                 {
-                    MessageBox.Show("删除失败！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("删除失败！可能rclone程序未运行或已异常停止。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DialogResult re= MessageBox.Show("是否强制删除？","删除",MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (re == DialogResult.Yes)
+                    {
+                        string select = mount_box.SelectedItems[0].Text;
+                        mount_box.SelectedItems[0].Remove();
+                        if(Status_Stop(select, true))
+                            MessageBox.Show("强制删除成功！","提示",MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             else
             {
                 mount_box.SelectedItems[0].Remove();
             }
+
+            //保存配置文件
+            save_data_json();
         }
 
         private void 设置Rclone路径ToolStripMenuItem_Click(object sender, EventArgs e)

@@ -120,9 +120,9 @@
             label6.Font = new Font("Segoe UI", 9F);
             label6.Location = new Point(469, 88);
             label6.Name = "label6";
-            label6.Size = new Size(35, 20);
+            label6.Size = new Size(46, 20);
             label6.TabIndex = 7;
-            label6.Text = "v1.0";
+            label6.Text = "v1.0.1";
             // 
             // label7
             // 

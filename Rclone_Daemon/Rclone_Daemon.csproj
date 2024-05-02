@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>TextTemplate.ico</ApplicationIcon>
 	  <Authors>GoodBoyboy</Authors>
-	  <VersionPrefix>1.0.0</VersionPrefix>
+	  <VersionPrefix>1.0.1</VersionPrefix>
 	  <Description>一个Rclone守护，挂载管理软件</Description>
 	  <Copyright>Copyright (c)  GoodBoyboy, GoodBoyboy.top</Copyright>
 	  <PackageProjectUrl>https://www.goodboyboy.top</PackageProjectUrl>
